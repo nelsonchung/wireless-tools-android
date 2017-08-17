@@ -1,48 +1,82 @@
-###############################################################################
-# Makefile for wireless-tools using Android NDK
-#
-# Taken verbatim from:
-# http://code.google.com/p/haggle/wiki/WirelessTools
-#
-# Copyright 2011, Eric Nordstrom and others
-#
-#   Licensed under the Apache License, Version 2.0 (the "License");
-#   you may not use this file except in compliance with the License.
-#   You may obtain a copy of the License at
-#
-#       http://www.apache.org/licenses/LICENSE-2.0
-#
-#   Unless required by applicable law or agreed to in writing, software
-#   distributed under the License is distributed on an "AS IS" BASIS,
-#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#   See the License for the specific language governing permissions and
-#   limitations under the License.
-#
-###############################################################################
-
 LOCAL_PATH:= $(call my-dir)
-################## build iwlib ###################
-include $(CLEAR_VARS)
-LOCAL_SRC_FILES := iwlib.c
-LOCAL_CFLAGS += -Wstrict-prototypes -Wmissing-prototypes -Wshadow -Wpointer-arith -Wcast-qual -Winline -MMD -fPIC
-LOCAL_MODULE:= libiw
-LOCAL_STATIC_LIBRARIES := libcutils libc libm
-include $(BUILD_STATIC_LIBRARY)
 
-################## build iwconfig ###################
 include $(CLEAR_VARS)
-LOCAL_SRC_FILES := iwconfig.c
-LOCAL_CFLAGS += -Wstrict-prototypes -Wmissing-prototypes -Wshadow -Wpointer-arith -Wcast-qual -Winline -MMD -fPIC
-LOCAL_MODULE:= iwconfig
-LOCAL_STATIC_LIBRARIES := libcutils libc libm libiw
-LOCAL_MODULE_PATH := $(TARGET_OUT_OPTIONAL_EXECUTABLES) # install to system/xbin
+
+IWPRIV_ANDROID_BUILD=y
+NO_PKG_CONFIG=y
+#include $(LOCAL_PATH)/Makefile
+
+#LOCAL_MODULE := libiw
+#LOCAL_CFLAGS += -Dwchar_t=int -DWE_NOLIBM=y 
+#LOCAL_SRC_FILES := iwlib.c
+LOCAL_MULTILIB := 32
+LOCAL_C_INCLUDES := \
+      $(LOCAL_PATH) \
+      bionic/libc/include/ \
+      bionic/libc/kernel/common/linux/ \
+#LOCAL_SHARED_LIBRARIES := libc libcutils
+#LOCAL_PRELINK_MODULE := false
+#LOCAL_MODULE_TAGS := eng
+#include $(BUILD_SHARED_LIBRARY)
+
+#include $(CLEAR_VARS)
+#LOCAL_MODULE := iwconfig
+#LOCAL_SRC_FILES := iwconfig.c
+#LOCAL_SHARED_LIBRARIES := libc libiw
+#LOCAL_MODULE_TAGS := eng
+#include $(BUILD_EXECUTABLE)
+
+#include $(CLEAR_VARS)
+#LOCAL_MODULE := iwlist
+#LOCAL_SRC_FILES := iwlist.c
+#LOCAL_SHARED_LIBRARIES := libc libiw
+#LOCAL_MODULE_TAGS := eng
+#include $(BUILD_EXECUTABLE)
+
+#include $(CLEAR_VARS)
+LOCAL_MODULE := iwpriv
+LOCAL_SRC_FILES := iwpriv.c iwlib.c
+LOCAL_SHARED_LIBRARIES := libc
+LOCAL_MODULE_TAGS := eng debug
 include $(BUILD_EXECUTABLE)
 
-################## build iwlist ###################
-include $(CLEAR_VARS)
-LOCAL_SRC_FILES := iwlist.c iwlib.h
-LOCAL_CFLAGS += -Wstrict-prototypes -Wmissing-prototypes -Wshadow -Wpointer-arith -Wcast-qual -Winline -MMD -fPIC
-LOCAL_MODULE:= iwlist
-LOCAL_STATIC_LIBRARIES := libcutils libc libm libiw
-LOCAL_MODULE_PATH := $(TARGET_OUT_OPTIONAL_EXECUTABLES) # install to system/xbin
-include $(BUILD_EXECUTABLE)
+#include $(CLEAR_VARS)
+#LOCAL_MODULE := iwapriv
+#LOCAL_SRC_FILES := iwapriv.c
+#LOCAL_SHARED_LIBRARIES := libc libiw
+#LOCAL_MODULE_TAGS := eng
+#include $(BUILD_EXECUTABLE)
+
+#include $(CLEAR_VARS)
+#LOCAL_MODULE := iwspy
+#LOCAL_SRC_FILES := iwspy.c
+#LOCAL_SHARED_LIBRARIES := libc libiw
+#include $(BUILD_EXECUTABLE)
+
+#include $(CLEAR_VARS)
+#LOCAL_MODULE := iwgetid
+#LOCAL_SRC_FILES := iwgetid.c
+#LOCAL_SHARED_LIBRARIES := libc libiw
+#LOCAL_MODULE_TAGS := eng
+#include $(BUILD_EXECUTABLE)
+
+#include $(CLEAR_VARS)
+#LOCAL_MODULE := iwevent
+#LOCAL_SRC_FILES := iwevent.c
+#LOCAL_SHARED_LIBRARIES := libc libiw
+#LOCAL_MODULE_TAGS := eng
+#include $(BUILD_EXECUTABLE)
+
+#include $(CLEAR_VARS)
+#LOCAL_MODULE := ifrename
+#LOCAL_CFLAGS += 
+#LOCAL_SRC_FILES := ifrename.c
+#LOCAL_SHARED_LIBRARIES := libc libiw
+#include $(BUILD_EXECUTABLE)
+
+#include $(CLEAR_VARS)
+#LOCAL_MODULE := macaddr
+#LOCAL_SRC_FILES := macaddr.c
+#LOCAL_SHARED_LIBRARIES := libc libiw
+#include $(BUILD_SHARED_LIBRARY)
+#include $(BUILD_EXECUTABLE)
